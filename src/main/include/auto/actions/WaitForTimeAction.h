@@ -1,36 +1,25 @@
 #pragma once
 
 #include "auto/actions/Action.h"
-
+#include "Constants.h"
 
 class WaitForTimeAction : public Action
 {
 public:
-    WaitForTimeAction(double time) : m_time(time) {}
-
-    void Start() override
-    {
-        // std::cout << "Starting wait for time action." << std::endl;
-        // std::cout << "Waiting for " << m_time << " seconds." << std::endl;
+    WaitForTimeAction(double time) : m_time(time) {
+        // printf("waiting for time: %f\n", m_time);
     }
-
-    void Periodic() override
+    void Periodic()
     {
-        m_elapsedTime = Action::GetCount() * LOOPTIME;
-        // std::cout << "Time elapsed: " << m_elapsedTime << " seconds." << std::endl;
+        m_elapsedTime = Action::GetCount() * Constants::LOOPTIME;
     }
-    void Finish() override
-    {
-        // std::cout << "Wait for time " << m_elapsedTime << "action is done." << std::endl;
-    }
-    bool IsActionComplete() override
-    {
-        //  ! TODO - Is this correct?
-        return (m_elapsedTime > (m_time + LOOPTIME / 2));
+    bool IsActionComplete()
+    {   
+        // printf("elapsed time: %f\n", m_elapsedTime);
+        return (m_elapsedTime > (m_time + (Constants::LOOPTIME / 2.0)));
     }
 
 private:
     double m_time;
     double m_elapsedTime = 0.0;
-    const double LOOPTIME = 0.02;
 };

@@ -9,6 +9,7 @@
 #include "Constants.h"
 #include "util/MathUtil.h"
 #include "util/Subsystem.h"
+#include "subsystems/Arm.h"
 
 #define MAX_JOYSTICK_BUTTONS 25
 #define MAX_JOYSTICK_AXES 8
@@ -35,6 +36,9 @@ enum ThreeWaySwitch
     Middle = 1,
     Top = 2,
 };
+
+const double ARM_FAST_ANGLE = 20.0;
+const double ARM_SLOW_ANGLE = 80.0;
 
 class Joystick : public Subsystem
 {
@@ -69,6 +73,7 @@ private:
     double flightctrl_raw_y;
     double flightctrl_raw_z;
     double flightctrl_raw_r;
+    double flightctrl_raw_slider;
     double flightctrl_shape_x;
     double flightctrl_shape_y;
     double flightctrl_shape_r;
@@ -113,6 +118,8 @@ private:
     Joystick();
     static Joystick *m_joystick;
 
+    Arm *m_arm;
+
 public:
     static Joystick *GetInstance();
 
@@ -147,6 +154,8 @@ public:
     double GetFlightCtrl_CMD_R() { return flightctrl_cmd_r; };
 
     double GetFlightCtrl_RAW_Z() { return flightctrl_raw_z; };
+
+    double GetFlightCtrl_Slider() { return flightctrl_raw_slider; };
 
     double GetGamepad_RAW_X() { return gamepad_raw_x; };
     double GetGamepad_RAW_Y() { return gamepad_raw_y; };

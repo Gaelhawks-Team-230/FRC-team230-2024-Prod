@@ -6,24 +6,17 @@ class CommandModel
 {
 private:
     double m_xf, m_yf, m_zf;
-    double kx, ky, kz;
 
 public:
     /**
      * @brief Construct a new Command Model object
      *
-     * @param kx x constant
-     * @param ky y constant
-     * @param kz z constant
      */
-    CommandModel(double kx, double ky, double kz)
+    CommandModel()
     {
         m_xf = 0.0;
         m_yf = 0.0;
         m_zf = 0.0;
-        this->kx = kx;
-        this->ky = ky;
-        this->kz = kz;
     }
 
     void Reset()
@@ -45,7 +38,7 @@ public:
 
      */
     void Calculate(double x, double y, double z,
-                   double *pxout, double *pyout, double *pzout)
+                   double *pxout, double *pyout, double *pzout, double kx, double ky, double kz)
     {
         double l_xfdot, l_yfdot, l_zfdot;
 

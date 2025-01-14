@@ -26,7 +26,7 @@ const double COUNTS_100MS = 1.0 / 100.0;
 const double MILLISECONDS_SEC = 100.0 / 0.1;
 const double REV_COUNTS = 1.0 / 2048.0;
 const double RAD_REV = 2.0 * M_PI;
-const double WHEEL_CIRCUMFERENCE = 2.00;
+const double WHEEL_CIRCUMFERENCE = 1.95;
 const double GEAR_RATIO = 1.0 / 6.75;
 
 const double DRIVE_VELOCITY_MEAS_WINDOW = 32.0;

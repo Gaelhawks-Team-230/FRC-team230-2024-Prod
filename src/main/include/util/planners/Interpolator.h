@@ -1,21 +1,25 @@
 #pragma once
 
-#include <array>
+#include "math.h"
+#include "Constants.h"
+#include "vector"
 #include <string>
 #include <iterator>
 #include <algorithm>
-#include <cmath>
 #include <map>
-#include <vector>
 
+using namespace std;
 class Interpolator
 {
 private:
     double PointSlope(double xActual, double x1, double y1, double x2, double y2);
-    double FindLowerKey(std::map<double, std::vector<double>> m_map, double p_key);
-    std::map<double, std::vector<double>> m_map;
+    map<double, vector<double>> m_map;
+    bool m_edgeCaseInterpolate;
+
 
 public:
-    Interpolator(std::map<double, std::vector<double>> mymap);
-    std::vector<double> Sample(double p_key);
+    Interpolator(map<double, vector<double>> mymap);
+    vector<double> Sample(double p_key);
+    double FindLowerKey(map<double, vector<double>> m_map, double p_key);
+
 };

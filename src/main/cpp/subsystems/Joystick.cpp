@@ -26,6 +26,8 @@ Joystick::Joystick()
 
     JoystickCountInitialize();
 
+    m_arm = Arm::GetInstance();
+
     LocalReset();
 }
 
@@ -86,6 +88,8 @@ void Joystick::LocalReset()
     flightctrl_raw_y = 0.0;
     flightctrl_raw_z = 0.0;
     flightctrl_raw_r = 0.0;
+
+    flightctrl_raw_slider = 0.0;
 
     flightctrl_shape_x = 0.0;
     flightctrl_shape_y = 0.0;
@@ -424,6 +428,10 @@ void Joystick::Analyze()
     flightctrl_raw_z = flightctrl->GetRawAxis(2);
     flightctrl_raw_r = flightctrl->GetRawAxis(5);
 
+    frc::SmartDashboard::PutNumber("flightctrl_raw_x", flightctrl_raw_x);
+
+    flightctrl_raw_slider = flightctrl->GetRawAxis(6);
+
     gamepad_raw_x = gamepad->GetRawAxis(0);
     // Convert to std frame of reference
     gamepad_raw_y = gamepad->GetRawAxis(1);
@@ -435,8 +443,13 @@ void Joystick::Analyze()
     flightctrl_shape_y = AxisShaping(flightctrl_raw_y, Constants::FlightCtrlAxis::Y_DEADBAND, Constants::FlightCtrlAxis::Y_SHAPING);
     flightctrl_shape_r = AxisShaping(flightctrl_raw_r, Constants::FlightCtrlAxis::R_DEADBAND, Constants::FlightCtrlAxis::R_SHAPING);
 
-    double k;
-    k = (1.0 - GetFlightCtrl_RAW_Z()) / 2.0;
+    frc::SmartDashboard::PutNumber("flightctrl_shape_x", flightctrl_shape_x);
+
+    // double k;
+    // k = (1.0 - GetFlightCtrl_RAW_Z()) / 2.0;
+
+    double armAngle = m_arm->GetArmAngle();
+    double k = MathUtil::Limit(0.0, 1.0, (ARM_SLOW_ANGLE - armAngle) / (ARM_SLOW_ANGLE - ARM_FAST_ANGLE));
 
     // flightctrl_scale_x = ScaleCmd(flightctrl_shape_x, TalonXXVI::Limit(XY_SFACTOR_LOW, XY_SFACTOR, (1.0 / 0.4) * (XY_SFACTOR - XY_SFACTOR_LOW) * k));
     // flightctrl_scale_y = ScaleCmd(flightctrl_shape_y, TalonXXVI::Limit(XY_SFACTOR_LOW, XY_SFACTOR, (1.0 / 0.4) * (XY_SFACTOR - XY_SFACTOR_LOW) * k));

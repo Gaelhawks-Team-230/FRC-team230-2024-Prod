@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <frc/DriverStation.h>
 #include "auto/actions/Action.h"
 
 /**
@@ -26,7 +27,7 @@ public:
     void RunActions()
     {
         // Check if we are done
-        if (m_actions.empty() && m_currentActionIndex >= m_actions.size())
+        if (m_actions.empty() || m_currentActionIndex >= m_actions.size())
         {
             m_isAutoComplete = true;
             return;
@@ -51,8 +52,23 @@ public:
         return m_isAutoComplete;
     }
 
+    double GetInitialRobotHeading() { return m_intialRobotHeading; };
+
+    void SetInitialRobotHeading(double p_heading)
+    {
+        if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue)
+        {
+            m_intialRobotHeading = p_heading;
+        }
+        else
+        {
+            m_intialRobotHeading = -p_heading;
+        }
+    }
+
 private:
     std::vector<Action *> m_actions;
     int m_currentActionIndex = 0;
     bool m_isAutoComplete = false;
+    double m_intialRobotHeading = 0.0;
 };

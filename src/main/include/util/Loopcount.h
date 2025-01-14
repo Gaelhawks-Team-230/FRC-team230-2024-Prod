@@ -3,14 +3,7 @@
 class Loopcount
 {
 public:
-    static Loopcount *GetInstance()
-    {
-        if (m_loopcount == nullptr)
-        {
-            m_loopcount = new Loopcount();
-        }
-        return m_loopcount;
-    }
+    static Loopcount *GetInstance();
 
     unsigned int GetLoopCount() { return m_count; }
     void IncrementLoopCount() { m_count++; }
@@ -22,4 +15,3 @@ private:
     unsigned int m_count;
 };
 
-Loopcount *Loopcount::m_loopcount = nullptr;

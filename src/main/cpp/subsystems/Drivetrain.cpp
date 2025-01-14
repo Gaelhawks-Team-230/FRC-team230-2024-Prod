@@ -25,10 +25,15 @@ Drivetrain::Drivetrain()
     m_backLeftModule = new SwerveModule(Constants::CAN::BACK_LEFT_STEER, Constants::CAN::BACK_LEFT_DRIVE, Constants::CAN::BACK_LEFT_ABSOLUTE_ENCODER, 3, P3Offset);
     m_backRightModule = new SwerveModule(Constants::CAN::BACK_RIGHT_STEER, Constants::CAN::BACK_RIGHT_DRIVE, Constants::CAN::BACK_RIGHT_ABSOLUTE_ENCODER, 2, P2Offset);
 
-    m_commandModel = new CommandModel(5.0, 5.0, 5.0);
+    // m_commandModel = new CommandModel(8.0, 8.0, 8.0);
+    // 5.0, 5.0, 5.0
+
+    m_commandModel = new CommandModel();
 
     m_gyro = new frc::ADXRS450_Gyro();
     m_gyro->Calibrate();
+
+    m_default_robot_orientation = DEFAULT_ROBOT_ORIENTATION;
 
     LocalReset();
 }
@@ -54,7 +59,7 @@ void Drivetrain::LocalReset()
     m_gyroVel = 0.0;
     m_r_ff = 0.0;
 
-    m_gyro_offset = DEFAULT_ROBOT_ORIENTATION;
+    m_gyro_offset = m_default_robot_orientation;
 
     for (int i = 0; i < 8; i++)
     {
@@ -65,6 +70,9 @@ void Drivetrain::LocalReset()
     m_targetXdot = 0.0;
     m_targetYdot = 0.0;
     m_targetPsidot = 0.0;
+    m_isAutonomous = false;
+
+    m_commandModel->Reset();
 }
 /**
  * @brief Computes swerve velocity and rotational commands
@@ -187,7 +195,22 @@ void Drivetrain::Periodic()
 
     double v1c, v2c, v3c, v4c, t1c, t2c, t3c, t4c;
     double xdotFil, ydotFil, psidotFil;
-    m_commandModel->Calculate(m_targetXdot, m_targetYdot, m_r_cmd, &xdotFil, &ydotFil, &psidotFil);
+
+    double kx, ky, kz;
+    if (m_isAutonomous)
+    {
+        kx = 5.0;
+        ky = 5.0;
+        kz = 5.0;
+    }
+    else
+    {
+        kx = 8.0;
+        ky = 8.0;
+        kz = 8.0;
+    }
+
+    m_commandModel->Calculate(m_targetXdot, m_targetYdot, m_r_cmd, &xdotFil, &ydotFil, &psidotFil, kx, ky, kz);
     SwerveKinematics(xdotFil, ydotFil, psidotFil, v1c, v2c, v3c, v4c, t1c, t2c, t3c, t4c);
 
     if (m_zeroVelDebugMode)
@@ -231,8 +254,8 @@ void Drivetrain::ToFieldCoordinates(double *xdot, double *ydot)
     l_vNorth = *xdot;
     l_vEast = *ydot;
     // field coordinates conversion
-    l_theta = (GetGyroReading() + DEFAULT_ROBOT_ORIENTATION) * (M_PI / 180.0); // added 180 deg offset to orient field coords in correct direction
-    l_theta = l_theta + GetGyroVel() * (M_PI / 180.0) * 0.15;
+    l_theta = (GetGyroReading() + m_default_robot_orientation) * (M_PI / 180.0); // added 180 deg offset to orient field coords in correct direction
+    l_theta = l_theta + GetGyroVel() * (M_PI / 180.0) * 0.18;
     *xdot = cos(l_theta) * l_vNorth + sin(l_theta) * l_vEast;
     *ydot = -sin(l_theta) * l_vNorth + cos(l_theta) * l_vEast;
 }
@@ -259,6 +282,7 @@ void Drivetrain::UpdateDash()
     m_backRightModule->UpdateDash();
 
     frc::SmartDashboard::PutNumber("Swerve/GyroWrappedAngle", m_gyroReading);
+    frc::SmartDashboard::PutNumber("Swerve/GyroReading", m_gyroReading);
     frc::SmartDashboard::PutNumber("Swerve/GyroVel", m_gyroVel);
     frc::SmartDashboard::PutNumberArray("Swerve/SwerveModuleGoalStates", m_swerveModuleGoalStates);
     frc::SmartDashboard::PutNumberArray("Swerve/SwerveModuleActualStates", m_swerveModuleActualStates);

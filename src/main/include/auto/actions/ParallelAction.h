@@ -13,11 +13,7 @@ class ParallelAction : public Action
 public:
     ParallelAction(std::vector<Action *> actions) : m_actions(actions) {}
 
-    void Start() override
-    {
-    }
-
-    void Periodic() override
+    void Periodic()
     {
         for (Action *action : m_actions)
         {
@@ -25,11 +21,7 @@ public:
         }
     }
 
-    void Finish() override
-    {
-    }
-
-    bool IsActionComplete() override
+    bool IsActionComplete()
     {
         for (Action *action : m_actions)
         {

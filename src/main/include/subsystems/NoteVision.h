@@ -12,28 +12,24 @@
 #include "util/MathUtil.h"
 #include "util/planners/Interpolator.h"
 
-// TODO: DOES NOT WORK, NEED TO FIX
+// TODO DOES NOT WORK, NEED TO FIX
 const int NOTE_OBJECT_DETECTION_PIPELINE = 0;
 
-const double KXY = 2.0;
-const double KPSI = 4.0;
+const double KXY = 4.0;
+const double KPSI = 3.0;
 
-const double CAMERA_HEADING_OFFSET = -5.0;
+const double CAMERA_HEADING_OFFSET = 0.0;
 
-const double XY_VEL_LIMIT = 75.0; // inches per second
-const double R_VEL_LIMIT = 80.0;  // degrees per second
+const double XY_VEL_LIMIT = 100.0; // inches per second
+const double R_VEL_LIMIT = 180.0;  // degrees per second
 
-// Goal pitch of Note deg
-const double GOAL_RY = -16.0;
-// Goal yaw of Note deg
-const double GOAL_RZ = 0.0;
-
-const std::map<double, std::vector<double>> NOTE_DISTANCE_TABLE{{-14.0, {6}}, {-12.2, {12}}, {-9.6, {24}}, {-7.5, {36}}, {-6.2, {48}}, {-5.7, {60}}, {-5.0, {72}}, {-4.6, {84}}, {-4.0, {96}}, {-3.8, {108}}};
-// const std::map<double, std::vector<double>> NOTE_YAW_TABLE{{, {}}, {, {}}, {, {}}, {, {}}, {, {}}, {, {}}, {, {}}, {, {}}, {, {}}, {, {}}, {, {}}, {, {}}, {, {}}};
+// * Pitch of camera, distance from robot
+const std::map<double, std::vector<double>> NOTE_DISTANCE_TABLE{{-20.0, {0.0}},{-16.0, {8.0}}, {-15.3, {12}}, {-7.4, {24}}, {-2.6, {36}}, {1.0, {48}}, {3.5, {60}}, {5.5, {72}}};
+const std::map<double, std::vector<double>> NOTE_YAW_TABLE{{0.0, {-4.11}},{8.0 , {0.35}}, {12, { 2.4}}, { 24, {7.0}}, {36.0, {9}}, {48, {10.9}}, {60, {12.1}}, {72, {12.9}}};
 
 const std::string NOTE_CAMERA_NAME = "NoteCamera";
 
-class NoteVision: public Subsystem
+class NoteVision : public Subsystem
 {
 public:
     void LocalReset(void);
@@ -41,7 +37,7 @@ public:
     void UpdateDash();
     void Periodic(){};
     void Stop(){};
-    void DriveTargetting(double *xdot, double *ydot);
+    void DriveControl(double &xdot, double &ydot, double &psidot);
     bool CheckNotePosition(double min, double max);
     void SetGoalXDist(double dist) { m_goalXDist = dist; };
     double GetGoalXDist() { return m_goalXDist; };
@@ -65,7 +61,7 @@ private:
     double m_pitch;
     double m_goalXDist;
     double m_xDist;
-    // double m_headingOffset;
+    double m_heading;
 
     void SetPipeline(int pipeline)
     {
@@ -73,5 +69,5 @@ private:
     }
 
     Interpolator *m_noteTable;
-    // Interpolator *m_noteYawTable;
+    Interpolator *m_noteYawTable;
 };

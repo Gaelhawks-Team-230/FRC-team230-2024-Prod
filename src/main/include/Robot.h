@@ -6,16 +6,28 @@
 #include "frc/RobotController.h"
 #include <units/time.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/DataLogManager.h>
 
 #include "Constants.h"
 #include "SubsystemManager.h"
 
+#include "subsystems/Arm.h"
+#include "auto/Autonomous.h"
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Joystick.h"
 #include "subsystems/AprilTag2DVision.h"
 #include "subsystems/NoteVision.h"
+#include "subsystems/Gatherer.h"
+#include "subsystems/Shooter.h"
+#include "subsystems/ArmKinematics.h"
+#include "subsystems/LED.h"
+#include "subsystems/Climber.h"
 #include "util/Loopcount.h"
+
+#include "RobotStateMachine.h"
 #include "RobotState.h"
+
+
 
 class Robot : public frc::TimedRobot
 {
@@ -49,8 +61,16 @@ private:
 
   Drivetrain *m_drivetrain;
   Joystick *m_userInput;
+  Climber *m_climber;
   AprilTag2DVision *m_aprilTagVision;
   NoteVision *m_noteVision;
+  Gatherer *m_gatherer;
+  LED *m_led;
+  RobotStateMachine *m_robotStateMachine;  Shooter *m_shooter;
+  Arm *m_arm;
+  ArmKinematics *m_armKin;
+  Autonomous *m_autonomous;
+
 
   RobotState *m_robotState;
 };

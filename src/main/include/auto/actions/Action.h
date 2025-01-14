@@ -11,22 +11,22 @@ public:
      * @brief Run code once when the action is started, for setup
      *
      */
-    virtual void Start() = 0;
+    virtual void Start(){};
     /**
      * @brief Run code periodically while the action is active
      *
      */
-    virtual void Periodic() = 0;
+    virtual void Periodic(){};
     /**
      * @brief Check if the action has completed its task
      *
      */
-    virtual bool IsActionComplete() { return true; };
+    virtual bool IsActionComplete() { return false; };
     /**
      * @brief Run code once when the action is finished
      *
      */
-    virtual void Finish() = 0;
+    virtual void Finish(){};
     /**
      * @brief Get the local loop count. First call will return 0, then 1, 2, 3, etc.
      *

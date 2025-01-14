@@ -160,6 +160,8 @@ void SwerveModule::UpdateDash()
     // frc::SmartDashboard::PutNumber(l_moduleName + "Steer encoder position: ", m_steerEncoderPosition);
     frc::SmartDashboard::PutNumber("Swerve/" + l_moduleName + "SteerRawPosition", m_steerEncoderRawPosition);
     frc::SmartDashboard::PutNumber("Swerve/" + l_moduleName + "SteerAdjPosition", m_steerEncoderPosition);
+    frc::SmartDashboard::PutNumber("Swerve/" + l_moduleName + "DriveCMD", m_drive_cmd);
+
 
     if (Constants::SWERVE_SYS_ID && m_moduleID == 1)
     {
@@ -230,6 +232,6 @@ void SwerveModule::DriveControl(double vel, double angle)
     m_drive_vErrIntegrator += m_drive_vErr * Constants::LOOPTIME;
     m_drive_vErrIntegrator = MathUtil::Limit(-DRIVE_kR / DRIVE_kV, DRIVE_kR / DRIVE_kV, m_drive_vErrIntegrator);
     m_drive_cmd = (DRIVE_kV / DRIVE_kR) * (m_drive_vErr * DRIVE_TAU + m_drive_vErrIntegrator);
-
+    
     SetDriveCmd(m_drive_cmd);
 }

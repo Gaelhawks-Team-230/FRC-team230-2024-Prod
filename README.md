@@ -4,7 +4,7 @@
 
 # Gaelhawks 2024 Monorepo
 
-![Relative date](https://img.shields.io/date/1709874000?style=for-the-badge&label=Waterbury%20District%20Event&labelColor=black&color=f8651d)
+![Relative date](https://img.shields.io/date/1711080000?style=for-the-badge&label=Western%20District%20Event&labelColor=black&color=f8651d)
 
 ## Table of Contents
 
